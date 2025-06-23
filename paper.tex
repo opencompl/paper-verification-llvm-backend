@@ -8,7 +8,7 @@
   \def\paperversion{draft}
 \fi
 
-\documentclass[review, anonymous, sigplan]{acmart}
+\documentclass[review, anonymous, acmsmall, screen]{acmart}
 
 \def\acmversionanonymous{anonymous}
 \def\acmversionjournal{journal}
@@ -69,21 +69,33 @@
 \ifcsdef{MintedExecutable}
 {
   % minted v3
-  \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{mathescape}
-  \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{mathescape, style=murphy}
-  \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer}{mathescape}
+  % \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{mathescape}
+  % \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{mathescape, style=murphy}
+  % \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer}{mathescape}
+  \newminted[mlir]{llvm}{mathescape}
+  \newminted[xdsl]{llvm}{mathescape, style=murphy}
+  \newminted[lean4]{llvm}{mathescape}
+
 }
 {
   \ifcsdef{minted@optlistcl@quote}
   {
-    \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{customlexer, mathescape}
-    \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{customlexer, mathescape, style=murphy}
-    \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer}{customlexer, mathescape}
+    \newminted[mlir]{llvm}{mathescape}
+    \newminted[xdsl]{llvm}{mathescape, style=murphy}
+    \newminted[lean4]{llvm}{mathescape}
+
+    % \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps}{customlexer, mathescape}
+    % \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer}{customlexer, mathescape, style=murphy}
+    % \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer}{customlexer, mathescape}
   }
   {
-    \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps -x}{mathescape}
-    \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer -x}{mathescape, style=murphy}
-    \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer -x}{mathescape}
+    \newminted[mlir]{llvm}{mathescape}
+    \newminted[xdsl]{llvm}{mathescape, style=murphy}
+    \newminted[lean4]{llvm}{mathescape}
+
+    % \newminted[mlir]{tools/lexers/MLIRLexer.py:MLIRLexerOnlyOps -x}{mathescape}
+    % \newminted[xdsl]{tools/lexers/MLIRLexer.py:MLIRLexer -x}{mathescape, style=murphy}
+    % \newminted[lean4]{tools/lexers/Lean4Lexer.py:Lean4Lexer -x}{mathescape}
   }
 }
 \makeatother
@@ -591,28 +603,28 @@ we care about most.
 % not include the draft section will interpret the listing as normal
 % latex where '%' is a comment and {} need to match, which they will
 % not if only one is commented.
-\begin{mlir}
-// This is a comment
-def @foo(%0 : !dialect.type)
-{
-  %a = dialect.op(%0) : !dialect.type // $\color{black}\circled{a}$
-}
-\end{mlir}
+% \begin{mlir}
+% // This is a comment
+% def @foo(%0 : !dialect.type)
+% {
+%   %a = dialect.op(%0) : !dialect.type // $\color{black}\circled{a}$
+% }
+% \end{mlir}
 \caption{A simple MLIR code example with markers. Markers can also be placed in
 	captions and refer to labels, e.g. \circled[lst:example]{a}.}
 \label{lst:example}
 \end{listing}
 
 \begin{listing}[H]
-\begin{lean4}
-theorem funext {f₁ f₂ : ∀ (x : α), β x}
-  (h : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by
-  show extfunApp (Quotient.mk' f₁) = 
-       extfunApp (Quotient.mk' f₂)
-  apply congrArg
-  apply Quotient.sound
-  exact h
-\end{lean4}
+% \begin{lean4}
+% theorem funext {f₁ f₂ : ∀ (x : α), β x}
+%   (h : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by
+%   show extfunApp (Quotient.mk' f₁) = 
+%        extfunApp (Quotient.mk' f₂)
+%   apply congrArg
+%   apply Quotient.sound
+%   exact h
+% \end{lean4}
 \caption{A simple Lean4 code example, taken from
   \url{https://lean-lang.org/lean4/doc/syntax\_highlight\_in\_latex.html\#example-with-minted}.}
 \end{listing}
@@ -621,30 +633,30 @@ The syntax highlighting also works for xDSL-like IRs.
 Notice that different minted styles can be used for different environments.
 The xDSL environment uses the murphy-style in this case, whereas the MLIR version applies the colorful-style.
 
-\begin{xdsl*}{fontsize=\scriptsize}
-func.func() [sym_name = "main", function_type = !fun<[
-              !iterators.columnar_batch<!tuple<[!i64]>>
-                 ], []>] {
-  ^bb0(%0 : !iterators.columnar_batch<!tuple<[!i64]>>):
-    %t : !iterators.stream<!llvm.struct<[!i64]>> =
-      iterators.scan_columnar_batch(%0 : ...)
-    %filtered : !iterators.stream<!llvm.struct<[!i64]>> =
-          iterators.filter(%input : …) [predicateRef = @s0]
-    iterators.sink(%filtered : !iterators.stream<!tuple<[!i64]>>)
-    func.return()
-}
+% \begin{xdsl*}{fontsize=\scriptsize}
+% func.func() [sym_name = "main", function_type = !fun<[
+%               !iterators.columnar_batch<!tuple<[!i64]>>
+%                  ], []>] {
+%   ^bb0(%0 : !iterators.columnar_batch<!tuple<[!i64]>>):
+%     %t : !iterators.stream<!llvm.struct<[!i64]>> =
+%       iterators.scan_columnar_batch(%0 : ...)
+%     %filtered : !iterators.stream<!llvm.struct<[!i64]>> =
+%           iterators.filter(%input : …) [predicateRef = @s0]
+%     iterators.sink(%filtered : !iterators.stream<!tuple<[!i64]>>)
+%     func.return()
+% }
 
-func.func() [sym_name = "s0", function_type = !fun<[
-    !llvm.struct<[!i64]>], [!i1]>] {
-  ^bb0(%struct : !llvm.struct<[!i64]>):
-    %id : !i64 = llvm.extractvalue(%struct : ...)
-              [position = [0 : !index]]
-    %five  : !i64 = arith.constant() [value = 5 : !i64]
-    %cmp : !i1 = arith.cmpi(%id : !i64, %five : !i64)
-              [predicate = 4 : !i64]
-    func.return(%cmp : !i1)
-}
-\end{xdsl*}
+% func.func() [sym_name = "s0", function_type = !fun<[
+%     !llvm.struct<[!i64]>], [!i1]>] {
+%   ^bb0(%struct : !llvm.struct<[!i64]>):
+%     %id : !i64 = llvm.extractvalue(%struct : ...)
+%               [position = [0 : !index]]
+%     %five  : !i64 = arith.constant() [value = 5 : !i64]
+%     %cmp : !i1 = arith.cmpi(%id : !i64, %five : !i64)
+%               [predicate = 4 : !i64]
+%     func.return(%cmp : !i1)
+% }
+% \end{xdsl*}
 
 The code in this document was compiled with minted version: \csname ver@minted.sty\endcsname.
 
