@@ -289,28 +289,30 @@ Authorative ISA Semantics}
 % as a foundation for extending proof-automated formal verification—using proof assistants, formal ISA models,
 % and an easily extensible architectural design—into the backends of today's and future mainstream compiler
 % infrastructures.
- Modern optimizing compilers apply numerous transformations, with instruction selection being a critical backend 
- pass that maps  the first-class intermediate representations (IR) to target instruction set architectures. 
- While formal verification has advanced in compiler middle-ends, backend components like instruction selection 
- still remain underexplored despite their impact on correctness. These lower-stack transformations are deeply 
- embedded within the complexity of a compiler backend but lack formal guarantees and are sources of 
- todays miscompilation bugs. Verified compilers ,e.g, CompCert propose a solution by proving the entire compiler correct, 
- however sacrificing optimization flexibility, development speed, and remaining niche, disconnected from day-to-day
-  toolchains. Commonly, such compiler backend verification relies on SMT solvers or manually derived ISA models, therefore
-   shifting trust boundaries to large unverified codebases and the authors understanding of the ISA. 
-% Modern optimizing compilers iteratively transform high-level source code into efficient machine code using a sequence of transformation passes. Among these, instruction selection (ISel) is the semantically critical pass point in the compiler backend that maps the first-class intermediate representations (IR) onto the target’s instruction set architecture (ISA). While compiler optimizations and their verification efforts have traditionally focused on the middle-end, the lower-stack components such as ISel also apply intricate , subtle optimizations that can affect executable code on all processor targets. Such transformations are deeply embedded within the complexity of the backend, lack formal correctness guarantees, and have historical been source of miscompilation bugs. 
-As a step towards scalable trustworthy backend compilation we present a prototype of a modular, extensible,
- and verified instruction selection pipeline for LLVM IR, built atop a minimal trusted code base verified against
-  authoritative ISA semantics. We remain connected to mainstream compilers by reimplementing LLVM's instruction 
-  selection patterns, and enable a rapidly evolving infrastructure by modeling ISel using a library of locally 
-  verified rewrite rules with straightforward integration of new patterns. Implemented in an interactive theorem 
-  prover, our system leverages a novel bit-vector library and the first fully verified SMT solver integrated into 
-  a proof assistant to automate the proof overhead. We provide a proof of concept that a modular, proof-automated 
-  approach to instruction selection, verified against ratified ISA semantics, can bring formal guarantees 
-  to compiler backends and remain connected to realistic production compilers. This work serves as a foundation
-  for extending trustworthy formal verification 
+Modern compiler frameworks like LLVM translate high-level code into efficient machine code via a series
+of transformation passes. Among these, instruction selection (ISel) is the semantically critical backend phase
+that maps the first-class intermediate representations to target-specific ISA instructions. Optimizing
+compilers enhance this phase with performance-improving transformations, but due to the lack of formal
+guarantees such have historically introduced subtle miscompilation bugs. Verified compilers ,e.g., 
+CompCert, address this by proving the entire compiler correct, however they sacrifice optimization 
+flexibility, development speed and remain limited to niche use cases disconnected from general-purpose compilation.
+Moreover, such compiler verification projects often rely on SMT solvers and manually derived ISA 
+models, shifting trust boundaries from the compiler to the large unverified codebase of the solver 
+and the authors understanding of the ISA. As a step towards scalable trustworthy backend compilation
+we present a prototype of a modular, extensible and verified instruction selection pipeline for LLVM
+IR verified against authoritative ISA semantics relying on a minimal trusted code base. By re-implementing
+LLVM's instruction selection patterns, we shed light onto an opaque and underexplored part of the 
+infrastructure and by modeling ISel using a library of locally verified rewrites with straightforward
+integration of new patterns, we enable a rapidly evolving and scalable infrastructure. Implemented
+in an interactive theorem prover, our system leverages a novel bit-vector library and the first 
+fully end-to-end verified bit-blaster integrated into a proof assistant to automate the proof burden.
+We provide a proof of concept that a modular, proof-automated approach for instruction selection, 
+verified against ratified ISA semantics, can bring formal
+guarantees to such a compiler backend pass and remain connected to realistic production compilers. We aim 
+for this work to serve as a 
+foundation for scaling trustworthy, proof-automated formal verification using proof assistants 
 % - using proof assistants, formal ISA models and an easily extensible architectural design - 
-into the backends of today's and future mainstream compiler backends.
+into backends of mainstream compilers of today and tomorrow.
 
 \end{abstract}
 
