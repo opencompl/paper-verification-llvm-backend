@@ -393,44 +393,44 @@ the source program, remain a recurring pathology within compiler infrastructures
 % %     \label{fig:intro_constant_folding}
 % \label{fig:intro_semantics}
 % \end{figure}
-\begin{listing}[H]
-% We cannot put '{' on a line after % in draftonly mode, as the hack we used to
-% not include the draft section will interpret the listing as normal
-% latex where '%' is a comment and {} need to match, which they will
-% not if only one is commented.
-% \begin{mlir}
-% // This is a comment
-def @foo(%0 : !dialect.type)
- %def i32 @add_unoptimized() 
- {
-  % 0 = add i32 2, 3
-  % 1 = add i32 %0, 4089
-  ret i32 %2
- }
-% {
-%   %a = dialect.op(%0) : !dialect.type // $\color{black}\circled{a}$
-% }
-% def i32 @add_unoptimized() 
+% \begin{listing}[H]
+% % We cannot put '{' on a line after % in draftonly mode, as the hack we used to
+% % not include the draft section will interpret the listing as normal
+% % latex where '%' is a comment and {} need to match, which they will
+% % not if only one is commented.
+% % \begin{mlir}
+% % // This is a comment
+% def @foo(%0 : !dialect.type)
+%  %def i32 @add_unoptimized() 
 %  {
-%   %0 = add i32 2, 3
-%   %1 = add i32 %0, 4089
+%   % 0 = add i32 2, 3
+%   % 1 = add i32 %0, 4089
 %   ret i32 %2
 %  }
-% \end{mlir}
-\caption{Function Amenable to Peephole Optimization.}
-% \caption{A simple MLIR code example with markers. Markers can also be placed in
-% 	captions and refer to labels, e.g. \circled[lst:example]{a}.}
-\label{lst:example-peephole-opportunity}
-\end{listing}
-\begin{listing}[H]
-% \begin{mlir}
-% \end{mlir}
-\caption{Program text after peephole optimization.}
-\label{lst:example-peephole-optimized}
-\end{listing}
+% % {
+% %   %a = dialect.op(%0) : !dialect.type // $\color{black}\circled{a}$
+% % }
+% % def i32 @add_unoptimized() 
+% %  {
+% %   %0 = add i32 2, 3
+% %   %1 = add i32 %0, 4089
+% %   ret i32 %2
+% %  }
+% % \end{mlir}
+% \caption{Function Amenable to Peephole Optimization.}
+% % \caption{A simple MLIR code example with markers. Markers can also be placed in
+% % 	captions and refer to labels, e.g. \circled[lst:example]{a}.}
+% \label{lst:example-peephole-opportunity}
+% \end{listing}
+% \begin{listing}[H]
+% % \begin{mlir}
+% % \end{mlir}
+% \caption{Program text after peephole optimization.}
+% \label{lst:example-peephole-optimized}
+% \end{listing}
 Semantic loss during compilation can result from implementation bugs or from the lack of formal 
 semantics that give precise mathematical definitions for constructs in the source and target languages
-(\autoref{fig:intro_semantics}). 
+% (\autoref{fig:intro_semantics}). 
 
  Without clear formalization, ambiguities emerge around what 
  constitutes correct behavior, giving compiler developers implicit freedom to interpret the effect 
@@ -581,26 +581,98 @@ instruction selection and optimizations at core are verified (\autoref{fig:pipel
 	% \item Contribution 2
 	% \item Contribution 3
 	% \item Contribution 4
-\item {A low-level representation of the RISC-V ISA for the 64-bit RISC-V processor and selected RISC-V extensions relevant to general-purpose compiler frameworks, implemented in an SSA-based intermediate representation in Lean with authoritative, official RISC-V semantics.}
+% \item {A low-level representation of the RISC-V ISA for the 64-bit RISC-V processor and selected RISC-V extensions relevant to general-purpose compiler frameworks, implemented in an SSA-based intermediate representation in Lean with authoritative, official RISC-V semantics.}
+% %This representation uses authoritative semantics extracted from the official RISC-V specification in Sail with correctness proofs for the extractio written in Lean.
+% \item{A lightweight RISC-V denotational semantics in Lean provably extracted from the official Sail-RiscV model, which we used as the semantics for our RISC-V model in Lean and are bit-blastable.}
+% \item {A multi-level hybrid LLVM and RISC-V SSA-based intermediate representation in Lean modeling an abstraction for higher-level LLVM IR and the low-level RISC-V ISA.}
+
+
+% \item {Proof automation in Lean that allows easy extension and verification of new rewrites where the proof gets automatically discharged or significantly simplified.}
+
+% \item {Design and implement a fully verified instruction selection pass based on the multi-level compiler IR and ISA dialect, where we have LLVM IR as the input and RISC-V as the target ISA with selection rules extracted from the LLVM instruction selector.}
+
+% \item {Implement a verified RISC-V peephole optimization pass that includes optimizations performed by the LLVM backends.}
+
+% \item {An end-to-end pipeline from LLVM IR functions within the arithmetic fragment to RISC-V assembly where the semantics preservation of the instruction selection and optimizations have a correctness proof in Lean.}
+
+% \item {Extension of existing compiler framework tooling e.g. Lean-MLIR and XDSL to support the implementation of our work e.g .enabiling assembly printing and register allocation for our selected RISC-V ISA composition.}
+
+% \item {Optimizer command line tool \textit{"opt"} for Lean, that  allows to apply the instruction lowering pass and optimization passes by providing the corresponding flag in Lean.}
+
+% \item {An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM components of the previously unverified RISC-V code generation test suite in LLVM. Additionally, we show that our verified code generation approach — focusing on instruction selection — achieves performance close to that of established compilers by lowering and evaluating 500 randomly generated programs.}
+% \item {A software representation of the pure RISC-V base ISA (64-bit) and selected RISC-V extensions 
+% relevant to general-purpose compiler frameworks, implemented in an SSA-based IR in Lean-native with 
+% provable authoritative, official RISC-V denotational semantics amenable for proof automation in ITPs 
+% as opposed to huge entire processor models.}
+% lean.mlir dialect, authroative semanitcs that are bit blastable 
+
+% %This representation uses authoritative semantics extracted from the official RISC-V specification in Sail with correctness proofs for the extractio written in Lean.
+% % \item{A lightweight RISC-V denotational semantics in Lean provably extracted from the official Sail-RiscV model, which we used as the semantics for our RISC-V model in Lean and are bit-blastable.}
+% \item {A multi-level, SSA-based hybrid LLVM and RISC-V IR in Lean modeling an abstraction for higher-level
+% LLVM IR and a machine abstraction of the RISC-V ISA as found in LLVM.  Including fully formal verification 
+% of progressive lowerings within the hybrid IR including verifying the unrealized conversion casts as generalized
+% in MLIR. A multi-level SSA-based hybrid LLVM and RISC-V IR in Lean, modeling high-level LLVM IR 
+% abstractions and RISC-V machine semantics, with fully verified progressive lowerings, including 
+% a first formalization and verification of unrealized generalized as found in MLIR.}
+% % -toolchain end-to-end verified lowering, rely on multi-levle IR including unrealized converion cast, extensible  (merge verification of rewrites and dialect). LLVM rewrites.
+% \item {Proof automation in Lean that allows full discharge of the refining rewrite patterns and enables
+% straightforward extension and verification of new rewrites by the novel end-to-end verified bit-blaster
+% in Lean. Therefore, as a first compiler verification project, we are relying solely on dependent-type
+% ITP-native verification tools with a minimal trusted codebase, as opposed to unverified SMT solvers.}
+% % verified instruction selector, extensible, based on a library rewrite patterns, autmoation, verified riscv semnaitcs, refinement, itp using bv\_decide 
+% \item {Design and implementation of an extensible, fully verified instruction selector prototype and 
+% a verified pattern-rewrite library, built by formally verifying instruction selection and optimization 
+% patterns from the opaque LLVM RISC-V backend. We prove refinements between LLVM IR semantics against 
+% ratified RISC-V semantics—including poison semantics—with a mechanized Lean proof.}
+% \item {An end-to-end interactive pipeline prototype that lowers the arithmetic fragment of LLVM IR 
+% to RISC-V register-allocated assembly, with fully verified instruction selection and optimization. 
+% Through a command-line pass manager (opt), our pipeline can be invoked directly in Lean on LLVM IR 
+% files, demonstrating that realistic compiler routines can be formally verified and implemented within 
+% an ITP.}
+% % -- minimze pass manager
+% \item {An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM 
+% components of the previously unverified RISC-V code generation test suite in LLVM. Additionally, we 
+% show that our verified code generation approach — focusing on instruction selection — achieves performance
+% close to that of established compilers by lowering and evaluating XY randomly generated programs. 
+% to be determined }
+\item {A software representation of the pure RISC-V base ISA and selected RISC-V extensions, implemented Lean-native
+ as an SSA-based IR with provable authoritative RISC-V denotational semantics designed amenable for
+  proof automation via bit-blasting directly in ITPs (compared to large, complex processor models).}
+% lean.mlir dialect, authroative semanitcs that are bit blastable 
 %This representation uses authoritative semantics extracted from the official RISC-V specification in Sail with correctness proofs for the extractio written in Lean.
-\item{A lightweight RISC-V denotational semantics in Lean provably extracted from the official Sail-RiscV model, which we used as the semantics for our RISC-V model in Lean and are bit-blastable.}
-\item {A multi-level hybrid LLVM and RISC-V SSA-based intermediate representation in Lean modeling an abstraction for higher-level LLVM IR and the low-level RISC-V ISA.}
+% \item{A lightweight RISC-V denotational semantics in Lean provably extracted from the official Sail-RiscV model, which we used as the semantics for our RISC-V model in Lean and are bit-blastable.}
+% \item {A multi-level, SSA-based hybrid LLVM and RISC-V IR in Lean modeling an abstraction for higher-level LLVM IR and a machine abstraction of the RISC-V ISA as found in LLVM.  Including fully formal verification of progressive lowerings within the hybrid IR including verifying the unrealized conversion casts as generalized in MLIR.
+% A multi-level SSA-based hybrid LLVM and RISC-V IR in Lean, modeling high-level LLVM IR abstractions and RISC-V machine semantics, with fully verified progressive lowerings, including  a first formalization and verification of unrealized generalized as found in MLIR.}
+\item{End-to-end certified library of instruction selection and optimization patterns extracted from
+ the underexplored LLVM backends, verified against the official RISC-V semantics relying on an extensible,
+  generalizabel toolchain we have built in Lean to model MLIR-style hybrid IRs and to verify their progressive
+   lowering including MLIR conversion cast.}
+% -toolchain end-to-end verified lowering, rely on multi-levle IR including unrealized converion cast, extensible  (merge verification of rewrites and dialect). LLVM rewrites.
+
+% \item {Proof automation in Lean that allows full discharge of the refining rewrite patterns and enables straightforward extension and verification of new rewrites by the novel end-to-end verified bit-blaster in Lean. Therefore, as a first compiler verification project, we are relying solely on dependent-type ITP-native verification tools with a minimal trusted codebase, as opposed to unverified SMT solvers.}
+% \item{A }
+% verified instruction selector, extensible, based on a library rewrite patterns, autmoation, verified riscv semnaitcs, refinement, itp using bv\_decide 
+
+\item {Implementation of an extensible, fully verified instruction selector prototype for LLVM IR built
+ atop the extensible, certified pattern-rewrite library with full proof discharge of the refining 
+ rewrite patterns and straightforward extension and verification of new rewrites by an end-to-end verified 
+ bit-blaster in Lean. Therefore, we are relying solely on dependent-type ITP-native verification tools
+  with a minimal trusted codebase, as opposed to unverified SMT solvers.}
 
 
-\item {Proof automation in Lean that allows easy extension and verification of new rewrites where the proof gets automatically discharged or significantly simplified.}
+% The selector is proven to refine LLVM IR semnaitcs of the source program towards RISC-V semanitcs, where this claim is supported by amechanized Loea  that proves refining rewrites between LLVM IR semantics and ratified RISC-V semantics, including poison semantic.  
 
-\item {Design and implement a fully verified instruction selection pass based on the multi-level compiler IR and ISA dialect, where we have LLVM IR as the input and RISC-V as the target ISA with selection rules extracted from the LLVM instruction selector.}
 
-\item {Implement a verified RISC-V peephole optimization pass that includes optimizations performed by the LLVM backends.}
+\item {An interactive, end-to-end pipeline prototype directly invokable over LLVM IR files via 
+command-line in Lean that lowers  LLVM IR to RISC-V register-allocated assembly, with fully verified,
+ scalable instruction selection and optimization at its core  demonstrating that realistic compiler 
+ routines can be formally verified and implemented within an ITP.}
 
-\item {An end-to-end pipeline from LLVM IR functions within the arithmetic fragment to RISC-V assembly where the semantics preservation of the instruction selection and optimizations have a correctness proof in Lean.}
-
-\item {Extension of existing compiler framework tooling e.g. Lean-MLIR and XDSL to support the implementation of our work e.g .enabiling assembly printing and register allocation for our selected RISC-V ISA composition.}
-
-\item {Optimizer command line tool \textit{"opt"} for Lean, that  allows to apply the instruction lowering pass and optimization passes by providing the corresponding flag in Lean.}
-
-\item {An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM components of the previously unverified RISC-V code generation test suite in LLVM. Additionally, we show that our verified code generation approach — focusing on instruction selection — achieves performance close to that of established compilers by lowering and evaluating 500 randomly generated programs.}
-
+\item {An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM 
+components of the previously unverified RISC-V code generation test suite in LLVM. Additionally, we 
+show that our verified code generation approach — focusing on instruction selection — achieves performance 
+close to that of established compilers by lowering and evaluating XY randomly generated programs. 
+to be determined }
 \end{itemize}
 
 \section{Our New Idea}
