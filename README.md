@@ -42,3 +42,4 @@ the following features:
   ```bash
   tools/generate_lexers_json.py
   ```
+
