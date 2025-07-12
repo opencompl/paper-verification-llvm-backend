@@ -349,15 +349,14 @@ into mainstream compiler backends of today and tomorrow.
 \maketitle
 
 \section{Introduction}
-A compiler performs the critical task of transforming human-readable source code into executable 
-machine code. In addition, modern, large-scale, open-source compilers such as LLVM \cite{llvm_ref} 
-perform a wide range of sophisticated optimizations, from simple local rewrites (Fig.\ref{fig:intro_
-constant_folding}) to complex interprocedural analyses across entire programs and optimize at every 
-stage, including instruction selection, where code is mapped to target-specific instructions. The 
-transformations are guided by performance heuristics (e.g. runtime, register usage, instruction count) 
- and are expected to preserve the original program semantics, though they lack formal guarantees of correctness.
-As a result, miscompilation bugs, where the compiled code diverges from  the intended semantics of 
-the source program, remain a recurring pathology within compiler infrastructures.
+A compiler translates human-readable source code into executable machine code. In addition, modern 
+optimizing production compilers like LLVM apply a broad spectrum of transformations, from local 
+rewrites to interprocedural analyses across whole programs. Such optimizations occur throughout the 
+compilation pipeline, including instruction selection, where the program is mapped onto the target-specific
+instruction set, and are guided by performance heuristics such as runtime, register pressure, and instruction
+count. The transformations are expected to preserve  original program semantics, though they lack formal 
+guarantees of correctness. As a result, miscompilation bugs, where the compiled code diverges from the
+intended semantics of the source program, remain a recurring pathology within compiler infrastructures.
 % \begin{figure}[ht]
 %     \centering
 %     \small
@@ -428,15 +427,43 @@ the source program, remain a recurring pathology within compiler infrastructures
 % \caption{Program text after peephole optimization.}
 % \label{lst:example-peephole-optimized}
 % \end{listing}
-Semantic loss during compilation can result from implementation bugs or from the lack of formal 
-semantics that give precise mathematical definitions for constructs in the source and target languages
+Semantic loss during compilation can be caused by implementation bugs or a lack of formal semantics 
+that give precise mathematical definitions for constructs in the source and target languages. 
+Without clear formalization, ambiguities emerge around what constitutes correct behavior, giving 
+compiler developers implicit freedom to interpret the effect of their optimizations inconsistently. 
+For example, if a language specification does not explicitly define the behavior of integer overflow 
+e.g., wraparound, clamping, undefined behavior, compilers make different assumptions, leading to inconsistent
+and potentially incorrect compilation.
 % (\autoref{fig:intro_semantics}). 
 
- Without clear formalization, ambiguities emerge around what 
- constitutes correct behavior, giving compiler developers implicit freedom to interpret the effect 
- of their optimizations inconsistently. For example, if a language specification does not explicitly 
- define the behavior of integer overflow (e.g., wraparound, clamping, undefined behavior), compilers
-  make different assumptions, leading to inconsistent and potentially incorrect compilation.
+To address these issues and to demonstrate the possibility of building trustworthy compilation pipelines,
+fully verified compilers that offer formal correctness guarantees e.g., CompCert, 
+a verified compiler for the C language, have been developed. However, as noted in, 
+“adding optimizations is limited by the effort required to verify them,” hinting towards the blocking
+proof burden involved. As a result, verified compilers are hard to extend, slow to adapt, and remain
+niche tools.
+
+In contrast, modern production compilers advance rapidly through continuous, fast-paced development 
+by their community. A prominent example is LLVM \cite{llvm_ref}, a widely used open-source compiler 
+framework forming the compiler middle- and backend for a variety of programming languages ,e.g., C, 
+Rust, Lean, Haskell.
+
+Moreover, LLVM embodies modern compiler design principles through its architecture built around an 
+intermediate representation (IR), which is a language used to represent a program within the compiler 
+toolchain that enables language-agnostic optimizations, and its design for iteratively optimizing a 
+program throughout its lifetime\footnote{By program lifetime we refer to the program at diffrent stages
+until executed during runtime ,e.g, compile time, link time, code generation}. By providing a frontend
+that lowers source code to LLVM's IR, compiler developers can reuse LLVM's powerful middle and backends,
+making LLVM attractive for building new compilers.
+
+At the same time, a bug in LLVM can compromise the correctness of compiled programs across any language
+that relies on its compilation tools. In Lean, a programming language and proof assistant, the LLVM-based
+compiler is part of the trusted code base, and its compilation results are used to reason in proofs. 
+Therefore, the soundness of these proofs hinges on the trustworthiness of the LLVM-based compiler. Similarly,
+Rust relies on the LLVM toolchain \cite{Rustlantis}, hence once compiled, preservation of properties 
+implemented at the Rust language level relies on the correctness of LLVM. This makes LLVM a critical 
+target for compiler verification using formal methods.
+
 \todo{add a figure aka semanitcs figure }
 %   \begin{figure}
 % \begin{minipage}{\textwidth}
@@ -451,57 +478,28 @@ semantics that give precise mathematical definitions for constructs in the sourc
 % Formalization of the RISC-V 64-bit shift-immediate instructions. Each instruction is mapped to its corresponding bit-level operation, providing a precise, unambiguous definition.}
 % \label{fig:intro_semantics}
 % \end{figure}
-
-To address these issues and to demonstrate the possibility of building trustworthy compilation pipelines,
- fully verified compilers that offer formal correctness guarantees (e.g., CompCert \cite{compcert_web}, 
- a verified compiler for the C language), have been developed. However, as noted in \cite{Mullen2016}, 
- “adding optimizations is limited by the effort required to verify them,” hinting towards the blocking 
- proof burden involved. As a result, verified compilers are hard to extend, slow to adapt, and remain 
- niche tools.
-
- In contrast, modern production compilers advance rapidly through continuous, fast-paced development 
- by their community. A prominent example is LLVM (Low-Level Virtual Machine)\cite{llvm_ref}, 
- a widely used open-source compiler infrastructure forming the compiler middle- and backend for 
- contemporary languages ,e.g, C, Rust, Lean.
-
-Moreover, LLVM embodies modern compiler design principles through its intermediate representation 
-(IR), which is a language used to represent to program throught the compiler toolchain that enable 
-language-agnostic optimizations, and its optimization architecture that applies transformation passes 
-iteratively (Fig.\ref{fig:intro_llvm}). By providing a frontend that lowers source code to LLVM's IR,
-compiler developers can reuse LLVM's powerful middle and backends, making LLVM attractive for building
-new compilers.
-
-At the same time, a bug in LLVM can compromise the correctness of compiled programs across any 
-language that relies on its compilation tools. In Lean, a programming language and proof assistant 
-\cite{Lean4}, the LLVM-based compiler is part of the trusted code base, and its compilation results 
-are used to reason in proofs. Therefore the soundness of these proofs hinges on the trustworthiness 
-of the LLVM-based compiler. Similarly, Rust relies on the LLVM toolchain \cite{Rustlantis}, hence 
-once compiled, preservation of properties implemented at the Rust language level relies on the 
-correctness of LLVM. This makes LLVM a critical target for compiler verification using formal methods.
-
 At the time of this thesis, verification efforts have targeted the LLVM ecosystem around LLVM IR 
-(middle end). 
-
-However, little efforts have focused on backend passes. Despite the backend being considered a 
-“highly optimizing compiler in its own” \cite{Regehr2025}. Any correctness guarantees established 
-in the middle end can be invalidated by bugs in the backend. Regehr et al. \cite{Regehr2025} 
-investigated the ARM backend and uncovered a multifold of bugs, highlighting that these low-level 
-components are the most error-prone parts of the compilation pipeline due to their opacity\cite{Mullen2016}.
- In addition, verification often relies on SMT solvers, which are automated verification tools 
- implemented by a large, unverified codebases with a history of bugs. Nuno et al. \cite{Nuno2021Alive2} 
- aimed to detect misoptimizations in LLVM’s middle end, but found that 20\% of the issues signaled 
- where bugs in the SMT solver itself.
-
-
+(middle end). However, little efforts have focused on backend passes. Despite the backend being considered a “highly
+optimizing compiler in its own”. Any correctness guarantees established in the middle
+end can be invalidated by bugs in the backend. Regehr et al. investigated the ARM 
+backend and uncovered a multifold of bugs, highlighting that these low-level components are the most
+error-prone parts of the compilation pipeline. However, such  verification work as in
+relied on SMT solvers, which are automated verification tools implemented by a large, unverified 
+codebases with a history of bugs. Nuno et Al. noted "we did encounter solver bugs while performing 
+this work" in, where they aimed to detect misoptimizations in LLVM’s middle end, but encountered that
+20\% of the reported issues were bugs in the SMT solver itself. Moreover, correctness is based on 
+handwritten ISA semantics, and the compiler backend's work is verified by first performing an unverified
+lift into LLVM IR, then reusing translation validators for the middle end. In contrast, we argue that the
+compiler backend should itself be the subject of full formal verification justified by the issues 
+encountered in previous work.\newline
+\textbf{Our Approach}:
 To address these limitations and increase confidence in the work performed by compiler backends, we 
 present a prototype of a formally verified instruction selection pipeline for a subset of LLVM IR 
 targeting the RISC-V ISA for 64-bit architecture. This system is implemented within the Lean interactive
 theorem prover and lowers functions, written in a pure arithmetic fragment of LLVM IR, into a RISC-V
 assembly dialect targeting a 64-bit architecture.  When a source program conforms to the supported
 IR fragment, our pipeline guarantees that the selected RISC-V instructions behave in accordance 
-with the original LLVM IR semantics. This claim is supported by a Lean proof in every case.
-
-To realize our project, we investigate how intermediate representations and instruction set 
+with the original LLVM IR semantics. This claim is supported by a Lean proof in every case. To realize our project, we investigate how intermediate representations and instruction set 
 architectures can be formally modeled in Lean, and, in this context, how formal processor models 
 can be used to derive authoritative semantics for the target ISA to reason in a proof assistant. 
 These language models within the interactive theorem prover then form the basis for verification and 
@@ -529,7 +527,7 @@ Together, these components enable a proof of concept for verified instruction se
 integrated optimizations, implemented in a theorem prover using a verified bit-blaster to prove LLVM 
 instruction selection patterns. We also provide a commandline interface for our instruction 
 selection pass, inspired by the LLVM optimizer, that provides an end-to-end pipeline where the 
-instruction selection and optimizations at core are verified (\autoref{fig:pipeline}).
+instruction selection and optimizations at core are verified.
 
 
 
