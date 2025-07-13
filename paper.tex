@@ -568,31 +568,31 @@ instruction selection and optimizations at core are verified.
 \noindent
 Our contributions are:\sarah{ref the section where I resolve this contribution}
 \begin{itemize}
-\item {A software representation of the pure RISC-V base ISA and selected RISC-V extensions, implemented Lean-native
+\item A software representation of the pure RISC-V base ISA and selected RISC-V extensions, implemented Lean-native
  as an SSA-based IR with provable authoritative RISC-V denotational semantics designed amenable for
-  proof automation via bit-blasting directly in ITPs (compared to large, complex processor models).}
+  proof automation via bit-blasting directly in ITPs (compared to large, complex processor models).
 
-\item{End-to-end certified library of instruction selection and optimization patterns extracted from
+\item End-to-end certified library of instruction selection and optimization patterns extracted from
  the underexplored LLVM backends, verified against the official RISC-V semantics relying on an extensible,
   generalizabel toolchain we have built in Lean to model MLIR-style hybrid IRs and to verify their progressive
-   lowering including MLIR conversion cast.}
+   lowering including MLIR conversion cast.
 
-\item {Implementation of an extensible, fully verified instruction selector prototype for LLVM IR built
+\item Implementation of an extensible, fully verified instruction selector prototype for LLVM IR built
  atop the extensible, certified pattern-rewrite library with full proof discharge of the refining 
  rewrite patterns and straightforward extension and verification of new rewrites by an end-to-end verified 
  bit-blaster in Lean. Therefore, we are relying solely on dependent-type ITP-native verification tools
-  with a minimal trusted codebase, as opposed to unverified SMT solvers.}
+  with a minimal trusted codebase, as opposed to unverified SMT solvers.
 
-\item {An interactive, end-to-end pipeline prototype directly invokable over LLVM IR files via 
+\item An interactive, end-to-end pipeline prototype directly invokable over LLVM IR files via 
 command-line in Lean that lowers  LLVM IR to RISC-V register-allocated assembly, with fully verified,
  scalable instruction selection and optimization at its core  demonstrating that realistic compiler 
- routines can be formally verified and implemented within an ITP.}
+ routines can be formally verified and implemented within an ITP.
 
-\item {An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM 
+\item An evaluation demonstrating the use of our pipeline and models in Lean by verifying the LLVM 
 components of the previously unverified RISC-V code generation test suite in LLVM. Additionally, we 
 show that our verified code generation approach — focusing on instruction selection — achieves performance 
 close to that of established compilers by lowering and evaluating XY randomly generated programs. 
-to be determined }
+to be determined (\autoref{sec:evaluation}).
 \end{itemize}
 
 \section{Our New Idea}
@@ -601,13 +601,10 @@ to be determined }
 \section{Implementation}
 \label{sec:implementation}
 
-\section{Related Work}
+\section{Evaluation}
+\label{sec:evaluation}
 
-\grosser{Related work should always be at the end of the document,
-         as it otherwise becomes an obstacle your reader must
-	 overcome before reaching your idea. For details see:
-	 \url{https://www.microsoft.com/en-us/research/academic-program/write-great-research-paper/}
-}
+\section{Related Work}
 
 \section{Conclusion}
 
