@@ -398,7 +398,7 @@ and potentially incorrect compilation.
 % (\autoref{fig:intro_semantics}). 
 
 To address these issues and to demonstrate the possibility of building trustworthy compilation pipelines,
-fully verified compilers that offer formal correctness guarantees e.g., CompCert, 
+fully verified compilers that offer formal correctness guarantees, e.g., CompCert, 
 a verified compiler for the C language, have been developed. However, as noted in, “adding optimizations 
 is limited by the effort required to verify them,” hinting towards the blocking
 proof burden involved. As a result, verified compilers are hard to extend, slow to adapt, and remain
@@ -406,14 +406,14 @@ niche tools.
 
 In contrast, modern production compilers advance rapidly through continuous, fast-paced development 
 by their community. A prominent example is LLVM, a widely used open-source compiler 
-framework forming the compiler middle- and backend for a variety of programming languages ,e.g., C, 
+framework forming the compiler middle- and backend for a variety of programming languages, e.g., C, 
 Rust, Lean, Haskell.
 
 Moreover, LLVM embodies modern compiler design principles through its architecture built around an 
 intermediate representation (IR), which is a language used to represent a program within the compiler 
 toolchain that enables language-agnostic optimizations, and its design for iteratively optimizing a 
 program throughout its lifetime\footnote{By program lifetime we refer to the program at diffrent stages
-until executed during runtime ,e.g, compile time, link time, code generation}. By providing a frontend
+until executed during runtime, e.g, compile time, link time, code generation}. By providing a frontend
 that lowers source code to LLVM's IR, compiler developers can reuse LLVM's powerful middle and backends,
 making LLVM attractive for building new compilers.
 
