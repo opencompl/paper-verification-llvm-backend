@@ -238,36 +238,58 @@
 \begin{abstract}
 % An abstract should consist of six main sentences:
 %  1. Introduction. In one sentence, what’s the topic?
-%  2. State the problem you tackle.
-%  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
-%  4. Explain, in one sentence, how you tackled the research question.
-%  5. In one sentence, how did you go about doing the research that follows from your big idea.
-%  6. As a single sentence, what’s the key impact of your research?
-
-% (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
 Modern compiler frameworks like LLVM translate high-level code into efficient machine code via a series
-of transformation passes. Among these, instruction selection (ISel) is the semantically critical backend phase
-that maps the first-class intermediate representations to target-specific ISA instructions. Optimizing
-compilers enhance this phase with performance-improving transformations, but due to the lack of formal
-guarantees such have historically introduced subtle miscompilation bugs. Verified compilers, e.g., 
-CompCert, address this by proving the entire compiler correct, however they sacrifice optimization 
-flexibility, development speed and remain limited to niche use cases disconnected from general-purpose compilation.
-Moreover, such compiler verification projects often rely on SMT solvers and manually derived ISA 
-models, shifting trust boundaries from the compiler to the large unverified codebase of the solver 
-and the authors understanding of the ISA. As a step towards scalable trustworthy backend compilation
-we present a prototype of a modular, extensible and verified instruction selection pipeline for LLVM
-IR verified against authoritative ISA semantics relying on a minimal trusted code base. By re-implementing
-LLVM's instruction selection patterns, we shed light onto an opaque and underexplored part of the 
-infrastructure and by modeling ISel using a library of locally verified rewrites with straightforward
-integration of new patterns, we enable a rapidly evolving and scalable infrastructure. Implemented
-in an interactive theorem prover, our system leverages a novel bit-vector library and the first 
-fully end-to-end verified bit-blaster integrated into a proof assistant to automate the proof burden.
-We provide a proof of concept that a modular, proof-automated approach for instruction selection, 
-verified against ratified ISA semantics, can bring formal
-guarantees to such a compiler backend pass and remain connected to realistic production compilers. We aim 
-for this work to serve as a 
-foundation for scaling trustworthy, proof-automated formal verification using proof assistants 
-into mainstream compiler backends of today and tomorrow.
+of transformation passes.
+Among these, instruction selection (ISel) is the semantically critical backend phase
+that maps the first-class intermediate representations to target-specific ISA instructions.
+\grosser{These sentences can be more to-the-point. In fact make it just one,
+that talks directly about compiler backends, and maybe state that these are
+sophisticated, complex, and that most of our modern software builds on a very
+small number of compiler backends.}
+%  2. State the problem you tackle.
+Optimizing compilers enhance this phase with performance-improving
+transformations, but due to the lack of formal guarantees such have historically
+introduced subtle miscompilation bugs.
+\grosser{This is a great place to explain that these backends become very complex, yet are prone to bugs}
+%  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
+Verified compilers, e.g., CompCert, address this by proving the entire compiler
+correct, however they sacrifice optimization flexibility, development speed and
+remain limited to niche use cases disconnected from general-purpose compilation.
+Moreover, such compiler verification projects often rely on SMT solvers and manually derived ISA
+models, shifting trust boundaries from the compiler to the large unverified codebase of the solver
+and the authors understanding of the ISA.
+\grosser{You need to be precise here. CompCert is not using SMT solvers. I would list two solutions:
+(a) CompCert maximal correctness, disjoint from LLVM, manual proofs, (b) John's work: automated with SMT
+solvers, large trusted code base, a bit ad-hoc as he uses alive. Neither uses an authorative ISA model}
+%  4. Explain, in one sentence, how you tackled the research question.
+As a step towards scalable trustworthy backend compilation we present a
+prototype of a modular, extensible and verified instruction selection pipeline
+for LLVM IR verified against authoritative ISA semantics relying on a minimal
+trusted code base.
+\grosser{Nice. Can we get 'automation' or 'scaling' into this sentence? Or maybe a dream/vision, e.g., that
+LLVM developers can write their ISel patterns and get automatically a formal proof of correctness, offering
+the best of both worlds, ease-of-writing of a compiler and maximal trust.}
+%  5. In one sentence, how did you go about doing the research that follows from your big idea.
+By re-implementing LLVM's instruction selection patterns, we shed light onto an
+opaque and underexplored part of the infrastructure and by modeling ISel using a
+library of locally verified rewrites with straightforward integration of new
+patterns, we enable a rapidly evolving and scalable infrastructure. Implemented
+in an interactive theorem prover, our system leverages a novel bit-vector
+library and the first fully end-to-end verified bit-blaster integrated into a
+proof assistant to automate the proof burden.  We provide a proof of concept
+that a modular, proof-automated approach for instruction selection, verified
+against ratified ISA semantics, can bring formal guarantees to such a compiler
+backend pass and remain connected to realistic production compilers.
+\grosser{Maybe a bit long? I wonder if we can make this a bit more to-the-point? Also, can we inline results from
+the evaluation, e.g., we verified XY rewrite patterns and demonstrated we match LLVM's performance on, ...}
+%  6. As a single sentence, what’s the key impact of your research?
+\grosser[We aim for this work to serve as a foundation for]{These words carry
+almost zero information, can we get more to the point?} scaling trustworthy, proof-automated formal verification
+using proof assistants into mainstream compiler backends of today and tomorrow.
+\grosser{By automating certified instruction selection to match the development
+speed of mainstream compilers, we take a first step towards bringing dependable software
+to the very foundations of our software ecosystem.}
+% (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
 \end{abstract}
 
 % Only add ACM notes and keywords in camera ready version
