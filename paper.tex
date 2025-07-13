@@ -421,11 +421,11 @@ At the same time, a bug in LLVM can compromise the correctness of compiled progr
 that relies on its compilation tools. In Lean, a programming language and proof assistant, the LLVM-based
 compiler is part of the trusted code base, and its compilation results are used to reason in proofs. 
 Therefore, the soundness of these proofs hinges on the trustworthiness of the LLVM-based compiler. Similarly,
-Rust relies on the LLVM toolchain \cite{Rustlantis}, hence once compiled, preservation of properties 
+Rust relies on the LLVM toolchain \grosser[\cite{Rustlantis}]{broken citation?}, hence once compiled, preservation of properties 
 implemented at the Rust language level relies on the correctness of LLVM. This makes LLVM a critical 
 target for compiler verification using formal methods.
 
-\todo{add a figure aka semanitcs figure }
+\sarah{add a figure aka semanitcs figure }
 %   \begin{figure}
 % \begin{minipage}{\textwidth}
 % \begin{listing}
@@ -446,7 +446,7 @@ end can be invalidated by bugs in the backend. Regehr et al. investigated the AR
 backend and uncovered a multifold of bugs, highlighting that these low-level components are the most
 error-prone parts of the compilation pipeline. However, such  verification work as in
 relied on SMT solvers, which are automated verification tools implemented by a large, unverified 
-codebases with a history of bugs. Nuno et Al. noted ``we did encounter solver bugs while performing 
+codebases with a history of bugs. \grosser[Nuno et Al.]{missing citation} noted ``we did encounter solver bugs while performing 
 this work'' in, where they aimed to detect misoptimizations in LLVM’s middle end, but encountered that
 20\% of the reported issues were bugs in the SMT solver itself. Moreover, correctness is based on 
 handwritten ISA semantics, and the compiler backend's work is verified by first performing an unverified
