@@ -454,6 +454,10 @@ lift into LLVM IR, then reusing translation validators for the middle end. In co
 compiler backend should itself be the subject of full formal verification justified by the issues 
 encountered in previous work.\newline
 \textbf{Our Approach}:
+\grosser{Consider moving some of this into \autoref{sec:idea}. I feel there is currently some redundancy
+between this paragraph, the list of contributions, and the upcoming idea's section. I would keep the
+description of the solution here very brief (2-4 sentences), then have the list of contributions,
+and them make people feel/experience your approach in \autoref{sec:idea}.}
 To address these limitations and increase confidence in the work performed by compiler backends, we 
 present a prototype of a formally verified instruction selection pipeline for a subset of LLVM IR 
 targeting the RISC-V ISA for 64-bit architecture. This system is implemented within the Lean interactive
@@ -558,6 +562,7 @@ close to that of established compilers by lowering and evaluating \sarah[XY]{} r
 \end{itemize}
 
 \section{The Idea: Certified Instruction Selection at Scale}
+\label{sec:idea}
 
 \grosser{Give a high-level overview of your idea. Let the reader \textbf{feel} how streamlined
 the process of defining a small peephole rewriter is. Give a couple of concrete examples.}
