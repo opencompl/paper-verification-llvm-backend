@@ -479,10 +479,10 @@ For the verification, instead of relying on unverified SMT solvers with large co
 our proofs in an interactive theorem prover with a minimal trusted codebase and robust proof automation
 for bit-vector reasoning.\newline
 Namely, the Lean theorem prover has recently received a novel bit-vector library and 
-supports \textit{bv\_decide}, the first fully verified SMT solver embedded in a 
+supports \texttt{bv\_decide}, the first fully verified SMT solver embedded in a 
 theorem prover. This enables automated reasoning over fixed-width bit-vector expressions, 
 allowing us to mechanically verify the correctness of rewrite rules and optimization patterns by 
-using the \textit{bv\_decide} bit-blaster.
+using the \texttt{bv\_decide} bit-blaster.
 
 Together, these components enable a proof of concept for verified instruction selection with 
 integrated optimizations, implemented in a theorem prover using a verified bit-blaster to prove LLVM 
