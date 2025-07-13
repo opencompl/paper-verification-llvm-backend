@@ -399,8 +399,8 @@ and potentially incorrect compilation.
 
 To address these issues and to demonstrate the possibility of building trustworthy compilation pipelines,
 fully verified compilers that offer formal correctness guarantees, e.g., CompCert, 
-a verified compiler for the C language, have been developed. However, as noted in, “adding optimizations 
-is limited by the effort required to verify them,” hinting towards the blocking
+a verified compiler for the C language, have been developed. However, as noted in, ``adding optimizations 
+is limited by the effort required to verify them,'' hinting towards the blocking
 proof burden involved. As a result, verified compilers are hard to extend, slow to adapt, and remain
 niche tools.
 
@@ -440,9 +440,9 @@ target for compiler verification using formal methods.
 % \label{fig:intro_semantics}
 % \end{figure}
 At the time of this thesis, verification efforts have targeted the LLVM ecosystem around LLVM IR 
-(middle end). However, little efforts have focused on backend passes. Despite the backend being considered a “highly
-optimizing compiler in its own”. Any correctness guarantees established in the middle
-end can be invalidated by bugs in the backend. Regehr et al. investigated the ARM 
+(middle end). However, little efforts have focused on backend passes. Despite the backend being considered a ``highly
+optimizing compiler in its own''. Any correctness guarantees established in the middle
+end can be invalidated by bugs in the backend. Regehr et al. investigated the ARM
 backend and uncovered a multifold of bugs, highlighting that these low-level components are the most
 error-prone parts of the compilation pipeline. However, such  verification work as in
 relied on SMT solvers, which are automated verification tools implemented by a large, unverified 
