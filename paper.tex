@@ -625,8 +625,123 @@ by evaluating the following research questions:
 \subsection{RQ3: Code Size and Runtime Performance Certified RISC-V vs LLVM}
 
 \section{Related Work}
+This section is broadly divided into two parts reflecting the two areas this paper spans. 
+First, we survey efforts in verified compilation, with an emphasis on projects that
+target the LLVM ecosystem. This includes contributions ranging from the validation of individual peephole
+rewrites to the development of fully end-to-end verified compilers. Then, we shift our focus to highlight 
+general advancements around trustworthy compilation with a focus on backends and verification tooling 
+such as language and ISA semantics besides rigorous compiler testing.
 
-\section{Conclusion}
+\textbf{Verified Compilation}
+In the past various efforts have focused on applying formal methods to the compiler design space. 
+We could identify two prominent approaches to exist: 
+The first approach focuses on building fully verified compilation infrastructures, 
+where compiler correctness is established once and for all through formal proofs. While this offers 
+strong guarantees, it typically involves significant manual proof effort and supports limited optimization.
+The second approach aims to verify existing highly optimizing mainstream compilers using translation validation.
+Translation validation refers to certifying that an execution stage of a compiler is correct by verifying
+the semantic equivalence between the input and output of individual executions of such a stage. Our work
+can be positioned in the middle ground, directing attention towards integrating end-to-end fully verified
+components but into the development of today's mainstream compilers.
+
+A prominent example of the first approach is CompCert \cite{Leroy2009Formal} a compiler for a subset of 
+the C programming language, ".. which is formally verified, using machine-assisted mathematical proofs, 
+to guarantee the absence of compiler bugs." CompCert compiles C programs into machine code for various 
+processor targets, including RISC-V that our work targets, and provides formal correctness guarantees 
+for most of the compilation stages as detailed in \cite{Leroy2009Formal}. To establish their correctness 
+claim the compiler is implemented and verified in the Rocq proof assistant, therefore also relying on 
+interactive theorem proving instead of SMT solvers. CompCert's compilation process progresses through 
+several IR's and compilation passes before outputting assembly code, therefore also supporting various
+levels of abstraction in their compiler pipeline which is also found in our work using multi-level IR's.
+However, enabling new, even simple optimizations in fully verified compiler toolchains traditionally 
+requires adapting the compiler core verification infrastructure,  risking disruption of existing proofs
+or exposing a high proof burden requiring expert developers. In contrast, as in Chapter XY our approach
+promotes flexibility by design through independent, extensible rewrites that can be provided without 
+compromising prior correctness guarantees and simply verified in isolation.
+
+
+While CompCert remains the well-known pioneering work in verified compilation, its ISA semantics, 
+analog to those of other works ,e.g,. \cite{Regehr2025}, are manually translated into the Rocq proof 
+assistant from the ISA specification, with no integration of externally verified machine-checked models 
+,e.g., generated from the Sail. This is in contrast to our work which offers stronger correctness 
+guarantees by using ratified RISC-V semantics as accepted by RISC-V International. Generally, CompCert
+is a work that exemplifies verified compilation, however as such it is developed as a stand-alone, 
+high-effort and complex tool that has been relegated to niche, safety-critical contexts. In contrast,
+Alive, a project that has gained wide spread acceptance within the LLVM ecosystem, showcases that verification
+and automation within the mainstream compiler design space is possible, useable and accepted by non-formal 
+compiler developers. Alive automatically verifies the correctness of LLVM IR optimizations by checking 
+input output refinement via an SMT solver. However, it does not constitute a fully formalized compiler 
+component, but rather a bounded translation validation tool aimed at reducing miscompilation risk. 
+Its bounded nature means that certain bug may go undetected and by relying on an SMT solver they 
+trust a large unverified codebase.\footnote{Alive sets an upper bound for loop unrolling, which can 
+cause it to miss certain miscompilation bugs.} In contrast, our implementation of an optimizing 
+instruction selection backend pass is certified by an end-to-end correctness proof, validating every 
+execution and offering a practical example of integrating full formal guarantees as foundations into 
+a realistic, extensible compilation pipeline. This without relying on SMT solver but using the novel
+bit-blaster integrated into a theorem prover. However, similar to Alive, which had a high-degree of 
+push-button automation, as seen in Section XY our work also aimed for automation which allows for scale.
+
+\textbf{Trustworthy Backend Compilation}
+\sarah{to do :compiler backend and ISel work }
+
+\textbf{Verified Peephole Optimization} As we have seen peephole rewriting is a common transformation 
+across the compilation pipeline which is also known to be particularly bug-prone.  Various 
+efforts verified and implemented local rewrite patterns and ensured their correctness ,e.g., Peek, a 
+framework for expressing, verifying, and executing machine code transformations for x86 within CompCert.
+ However, Peek requires the peephole rewrite patterns to be linear and adjacent. Contrary to the peephole 
+ hole rewriter in Lean-MLIR that we use, which can optimize across non-linear instruction sequences interleaved 
+ with unrelated instructions allowing for more optimization flexibility . However, Peek explicitly models
+side effects and includes memory-related rewrites, which our optimizing instruction selection patterns 
+do not. However, both works reason that applying locally semantics-preserving rewrites preserves the 
+global meaning of the program. Other projects on verifying a library of rewriting patterns was conducted
+in \sarah{to do: fix and add citation as in thesis}, verifying peephole rewrites in LLVM's InstCombine 
+optimization pass or by Alive or AliveInLean. There also exist verification efforts for such peephole
+optimizations in other programming languages and frameworks e.g. [] developed a verification tool 
+for rewrites in Halide. Often such verification reasons over equality between the find and replace 
+rewrite pattern instead of reasoning for correctness via refinement, which is the correctness lemma 
+in our work.
+
+\textbf{Lean-MLIR}
+We mention lean-MLIR in this section to highlight the related projects built with Lean-MLIR as it served 
+as a framework in our implementation. XY\sarah{cite sid paper} used Lean-MLIR to reimplement and formally
+ verify test cases from Alive2, which demonstrated the use of Lean-MLIR to real world compiler optimization
+patterns. However at the time of this thesis, Lean-MLIR had been used to formulate and verify rewrites 
+within single IR's and has not been extended to support cross-dialect transformations or used to model 
+hardware-level assembly IR's. This gave the potential to further develop the work in the direction 
+of dialect lowerings and low-level language optimizations. Inspired by this, we extend the application 
+of Lean-MLIR and its verification methodology across multiple layers of a compiler pipeline, by adding 
+an instruction selection pass and machine-level transformations therefore using the framework for 
+transformation located in the low-compiler stack. 
+
+The formalization of LLVM IR semantics has been at focus of several research as there are bugs caused 
+by underspecification of the LLVM IR semantics which leads to different interpretations of certain 
+instructions in a given context. To build verification tools and distinguish miscompilations from correct 
+compilations,  consensus on the specification of LLVM IR is needed. The intended semantics of LLVM IR are 
+documented online in the reference manual but are not exhaustive and given the size and high activity 
+of the LLVM community, there exist a lack of coordination on the accepted semantics of LLVM IR.  
+Vellvm is one effort to formalize the semantics of LLVM IR in RCoq and provides a framework for 
+reasoning about LLVM IR programs. However it uses a definition of refinement that differs from the 
+one used in this thesis e.g. they do not satisfy the monotonicity property that we believe should hold.
+ Similar to our work, Vellvm does not support all forms of UB e.g. they fix all undef values to a zero 
+ initializer. Besides Vellvm, the authors of Alive provide a formalization of LLVM IR in their paper. 
+ Alive interacted with the LLVM community to iterate over underspecified parts and reached consensus 
+ on how to fix discrepancies in the LLVM IR semantics—e.g., how the select instruction interacts with 
+ poison values. This work performed by Alive is relevant to our own, since our semantic model provided 
+ by Lean-MLIR is close to the Alive formalization except for the mentioned UB. The semantics of UB have 
+ been explored in \sarah{cite taming UB paper} and proposed changes adapted by LLVM.  For any formal
+  methods efforts in the LLVM ecosystem, formalizations of LLVM IR are crucial and therefore we mention
+  this work in this section. Besides the little convergence on formalizing compiler IR semantics, 
+  the mechanization of ISA semanitcs has shown projects like Sail. However compiler verification projects
+  like Alive2, compcertC \sarah{to do: cite aka use the number not name} made little use of such mechanized
+  models and derived ISA model by hand, which makes our work foundational different to such previous 
+  efforts as we provable extracted the official mechanized semantics.
+
+\textbf{Compiler testing and fuzzing}
+Besides formal verification, which provides strong correctness guarantees and can prove the absence of bugs, 
+as demonstrated in CompCert, testing and fuzzing tools have been highly effective in identifying compiler bugs. 
+Several bugs in the optimizers of commercial compilers, including LLVM, have been discovered by tools such as 
+those described in \sarah{copy citation from thesis properly}.
+  \section{Conclusion}
 
 %% Acknowledgments
 \begin{acks}                            %% acks environment is optional
